@@ -6,8 +6,7 @@ set -e
 ln -f hits.parquet data/hits/hits.parquet
 sudo chown -R 1000:1000 data
 
-# Run create.sql to register the schema, the external table, and the
-# ClickBench-typed view.
+# Run create.sql to register the schema and the external table.
 sudo docker cp create.sql trino:/tmp/create.sql
 sudo docker exec -i trino trino --file /tmp/create.sql
 

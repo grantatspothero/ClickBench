@@ -9,7 +9,7 @@ beyond Docker installed.
 
 The ClickBench `hits.parquet` file stores `EventTime`, `ClientEventTime`
 and `LocalEventTime` as Unix-epoch `BIGINT` values, and `EventDate` as a
-`UINT16` count of days since 1970-01-01. `create.sql` registers the
-parquet file as a raw external table (`hits_raw`) and then exposes a
-`hits` view that converts those columns to `TIMESTAMP` and `DATE`, so
-`queries.sql` matches the canonical ClickBench query text.
+`UINT16` count of days since 1970-01-01 (read directly as `DATE`).
+`create.sql` registers the parquet file directly as the external table
+`hits`, and `queries.sql` applies `from_unixtime(EventTime)` where
+timestamp operations are needed.

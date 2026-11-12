@@ -1,6 +1,6 @@
 CREATE SCHEMA IF NOT EXISTS hive.clickbench WITH (location = 'local:///');
 
-CREATE TABLE hive.clickbench.hits_raw (
+CREATE TABLE hive.clickbench.hits (
     WatchID bigint,
     JavaEnable smallint,
     Title varchar,
@@ -111,34 +111,3 @@ WITH (
     external_location = 'local:///hits',
     format = 'PARQUET'
 );
-
--- The Parquet files store EventTime/ClientEventTime/LocalEventTime as Unix epoch seconds.
--- The view converts those columns to TIMESTAMP so queries.sql matches the standard text.
-CREATE VIEW hive.clickbench.hits AS
-SELECT
-    WatchID, JavaEnable, Title, GoodEvent,
-    from_unixtime(EventTime) AS EventTime,
-    EventDate,
-    CounterID, ClientIP, RegionID, UserID, CounterClass, OS, UserAgent,
-    URL, Referer, IsRefresh, RefererCategoryID, RefererRegionID,
-    URLCategoryID, URLRegionID, ResolutionWidth, ResolutionHeight,
-    ResolutionDepth, FlashMajor, FlashMinor, FlashMinor2, NetMajor, NetMinor,
-    UserAgentMajor, UserAgentMinor, CookieEnable, JavascriptEnable,
-    IsMobile, MobilePhone, MobilePhoneModel, Params, IPNetworkID,
-    TraficSourceID, SearchEngineID, SearchPhrase, AdvEngineID, IsArtifical,
-    WindowClientWidth, WindowClientHeight, ClientTimeZone,
-    from_unixtime(ClientEventTime) AS ClientEventTime,
-    SilverlightVersion1, SilverlightVersion2, SilverlightVersion3,
-    SilverlightVersion4, PageCharset, CodeVersion, IsLink, IsDownload,
-    IsNotBounce, FUniqID, OriginalURL, HID, IsOldCounter, IsEvent,
-    IsParameter, DontCountHits, WithHash, HitColor,
-    from_unixtime(LocalEventTime) AS LocalEventTime,
-    Age, Sex, Income, Interests, Robotness, RemoteIP, WindowName,
-    OpenerName, HistoryLength, BrowserLanguage, BrowserCountry,
-    SocialNetwork, SocialAction, HTTPError, SendTiming, DNSTiming,
-    ConnectTiming, ResponseStartTiming, ResponseEndTiming, FetchTiming,
-    SocialSourceNetworkID, SocialSourcePage, ParamPrice, ParamOrderID,
-    ParamCurrency, ParamCurrencyID, OpenstatServiceName, OpenstatCampaignID,
-    OpenstatAdID, OpenstatSourceID, UTMSource, UTMMedium, UTMCampaign,
-    UTMContent, UTMTerm, FromTag, HasGCLID, RefererHash, URLHash, CLID
-FROM hive.clickbench.hits_raw;
